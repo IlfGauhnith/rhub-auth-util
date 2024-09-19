@@ -74,6 +74,7 @@ func ConnectToDatabase() (*sql.DB, error) {
 		log.Printf("Error pinging the database: %v", err)
 		return DBPool, err
 	}
+	log.Print("Database successfully pinged")
 
 	return DBPool, nil
 }
