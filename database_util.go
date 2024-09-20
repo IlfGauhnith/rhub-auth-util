@@ -54,8 +54,14 @@ func ConnectToDatabase() (*sql.DB, error) {
 	user := os.Getenv("DB_USER_DEV")
 	password := os.Getenv("DB_PASSWORD_DEV")
 
+	if host == "" || port == "" || dbname == "" || user == "" || password == "" {
+		return nil, fmt.Errorf("missing environment variable for database connection")
+	}
+
 	dbURI := fmt.Sprintf("host=%s user=%s password=%s port=%s database=%s",
 		host, user, password, port, dbname)
+
+	log.Printf("Connecting to database with URI: %s", dbURI)
 
 	DBPool, err := sql.Open("pgx", dbURI)
 	if err != nil {
@@ -72,7 +78,7 @@ func ConnectToDatabase() (*sql.DB, error) {
 	err = DBPool.Ping()
 	if err != nil {
 		log.Printf("Error pinging the database: %v", err)
-		return DBPool, err
+		return nil, fmt.Errorf("DB ping error: %w", err)
 	}
 	log.Print("Database successfully pinged")
 
